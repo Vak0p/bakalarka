@@ -1,38 +1,67 @@
-import html
 from functools import partial
 
-from PySide6.QtCore import QEvent, QObject, Qt, QThreadPool, QTimer, Signal, Slot
-from PySide6.QtWidgets import QFileDialog, QMessageBox, QSizePolicy
+from PySide6.QtCore import QEvent, QObject, QThreadPool, QTimer, Signal, Slot
+from PySide6.QtWidgets import (QFileDialog, QHBoxLayout, QMessageBox, QPushButton,
+                               QSizePolicy, QWidget)
 
 from backend.video import SUPPORTED_EXTENSIONS, VideoError, VideoInfo, VideoSource
 from frontend.widgets.frame_player import FramePlayer
+from frontend.widgets.video_info_card import VideoInfoCard
 from frontend.workers import PreviewWorker
 
 PREVIEW_FRAMES = 100
 PREVIEW_MAX_WIDTH = 480
-PATH_COLOR = "#9A9AA0"
-ZERO_WIDTH_SPACE = "\u200b"
+LOADING_TOOLTIP = "Available once the video preview has finished loading"
+
+CONTINUE_BUTTON_STYLE = """
+QPushButton {
+    background-color: transparent;
+    color: #C38B6B;
+    border: 2px solid #C38B6B;
+    border-radius: 5px;
+    font-weight: bold;
+    padding: 10px;
+}
+QPushButton:hover {
+    background-color: rgba(195, 139, 107, 40);
+    color: #D49D7E;
+    border-color: #D49D7E;
+}
+QPushButton:disabled {
+    background-color: transparent;
+    color: #5B5B60;
+    border-color: #3A3B3F;
+}
+"""
+
+SECONDARY_BUTTON_STYLE = """
+QPushButton {
+    background-color: #3A3B3F;
+    color: #E8E8E8;
+    border: none;
+    border-radius: 5px;
+    font-weight: normal;
+    padding: 7px 12px;
+}
+QPushButton:hover {
+    background-color: #4A4B50;
+}
+QPushButton:pressed {
+    background-color: #2B2C30;
+}
+"""
 
 
-def format_video_info(info: VideoInfo, path: str) -> str:
-    wrappable_path = (
-        html.escape(path)
-        .replace("\\", "\\" + ZERO_WIDTH_SPACE)
-        .replace("/", "/" + ZERO_WIDTH_SPACE)
-    )
-    details = (
-        f"{info.width}×{info.height} · {info.fps:.1f} fps · "
-        f"{info.duration_s:.0f} s · {info.size_bytes / 1e6:.0f} MB"
-    )
-    return (
-        f"<b>{html.escape(info.path.name)}</b><br>"
-        f'<span style="color: {PATH_COLOR};">{wrappable_path}</span><br>'
-        f"{details}"
-    )
+def _spacer_state(spacer):
+    size = spacer.sizeHint()
+    policy = spacer.sizePolicy()
+    return size.width(), size.height(), policy.horizontalPolicy(), policy.verticalPolicy()
 
 
 class UploadPageController(QObject):
     video_loaded = Signal(object)
+    video_removed = Signal()
+    continue_requested = Signal()
 
     def __init__(self, window, ui):
         super().__init__(window)
@@ -42,9 +71,34 @@ class UploadPageController(QObject):
         self._job_id = 0
         self.info: VideoInfo | None = None
 
+        self._spacers = [ui.v_spacer_1, ui.v_spacer_2]
+        self._default_spacers = [_spacer_state(spacer) for spacer in self._spacers]
+
         self._player = FramePlayer()
         self._player.hide()
-        ui.drag_and_drop_zone.layout().insertWidget(0, self._player, 1)
+
+        self._continue_button = QPushButton("CONTINUE TO VIDEO TRIMMING")
+        self._continue_button.setStyleSheet(CONTINUE_BUTTON_STYLE)
+        self._continue_button.hide()
+
+        self._info_card = VideoInfoCard()
+        self._info_card.hide()
+
+        self._remove_button = QPushButton("Remove video")
+        self._replace_button = QPushButton("Upload different video")
+        self._secondary_row = QWidget()
+        row_layout = QHBoxLayout(self._secondary_row)
+        row_layout.setContentsMargins(0, 0, 0, 0)
+        row_layout.addWidget(self._remove_button, 1)
+        row_layout.addWidget(self._replace_button, 1)
+        self._secondary_row.setStyleSheet(SECONDARY_BUTTON_STYLE)
+        self._secondary_row.hide()
+
+        zone_layout = ui.drag_and_drop_zone.layout()
+        zone_layout.insertWidget(0, self._player, 1)
+        zone_layout.insertWidget(1, self._continue_button)
+        zone_layout.insertWidget(2, self._info_card)
+        zone_layout.insertWidget(zone_layout.indexOf(ui.upload_button) + 1, self._secondary_row)
 
         formats = ", ".join(ext.lstrip(".").upper() for ext in SUPPORTED_EXTENSIONS)
         ui.formats_label.setText(f"Supported video formats: {formats}")
@@ -52,6 +106,9 @@ class UploadPageController(QObject):
         ui.drag_and_drop_zone.setAcceptDrops(True)
         ui.drag_and_drop_zone.installEventFilter(self)
         ui.upload_button.clicked.connect(self._choose_file)
+        self._continue_button.clicked.connect(self.continue_requested)
+        self._replace_button.clicked.connect(self._choose_file)
+        self._remove_button.clicked.connect(self._remove_video)
 
     def eventFilter(self, watched, event):
         if watched is self._ui.drag_and_drop_zone:
@@ -97,16 +154,37 @@ class UploadPageController(QObject):
     def _show_video_info(self, info: VideoInfo):
         ui = self._ui
         ui.video_icon_label.hide()
-        for spacer in (ui.v_spacer_1, ui.v_spacer_2):
+        ui.drop_here_label.hide()
+        ui.upload_button.hide()
+        for spacer in self._spacers:
             spacer.changeSize(0, 0, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
         ui.drag_and_drop_zone.layout().invalidate()
 
-        path = str(info.path.absolute())
-        ui.drop_here_label.setTextFormat(Qt.TextFormat.RichText)
-        ui.drop_here_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        ui.drop_here_label.setWordWrap(True)
-        ui.drop_here_label.setToolTip(path)
-        ui.drop_here_label.setText(format_video_info(info, path))
+        self._info_card.set_info(info)
+        self._info_card.show()
+        self._secondary_row.show()
+
+        self._continue_button.setEnabled(False)
+        self._continue_button.setToolTip(LOADING_TOOLTIP)
+        self._continue_button.show()
+
+    def _remove_video(self):
+        self._cancel_preview()
+        self.info = None
+        self._player.clear()
+        self._player.hide()
+        self._continue_button.hide()
+        self._info_card.hide()
+        self._secondary_row.hide()
+
+        ui = self._ui
+        ui.video_icon_label.show()
+        ui.drop_here_label.show()
+        ui.upload_button.show()
+        for spacer, state in zip(self._spacers, self._default_spacers):
+            spacer.changeSize(*state)
+        ui.drag_and_drop_zone.layout().invalidate()
+        self.video_removed.emit()
 
     def _choose_file(self):
         extensions = " ".join(f"*{ext}" for ext in SUPPORTED_EXTENSIONS)
@@ -131,6 +209,8 @@ class UploadPageController(QObject):
     def _on_finished(self, job_id):
         if job_id == self._job_id:
             self._player.finish()
+            self._continue_button.setEnabled(True)
+            self._continue_button.setToolTip("")
 
     @Slot(int, str)
     def _on_failed(self, job_id, message):
