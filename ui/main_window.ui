@@ -103,19 +103,6 @@ QPushButton:hover {
         </widget>
        </item>
        <item>
-        <spacer name="v_spacer_4">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
         <widget class="QLabel" name="recent_files_label">
          <property name="text">
           <string>Recent Files</string>
@@ -144,19 +131,6 @@ QPushButton:hover {
           <number>0</number>
          </property>
         </widget>
-       </item>
-       <item>
-        <spacer name="v_spacer_5">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
        </item>
        <item>
         <widget class="QLabel" name="recent_projects_label">

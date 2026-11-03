@@ -1,3 +1,5 @@
+from collections.abc import Sequence
+
 from PySide6.QtCore import QPoint, QRect, QRectF, QSize, Qt, QTimer
 from PySide6.QtGui import QColor, QPainter
 from PySide6.QtWidgets import (QHBoxLayout, QLabel, QPushButton, QSizePolicy,
@@ -176,6 +178,11 @@ class FramePlayer(QWidget):
         self._show(0)
         if len(self._frames) > 1:
             self._start_playback()
+
+    def set_frames(self, frames: Sequence[PreviewFrame]):
+        self.clear()
+        self._frames.extend(frames)
+        self.finish()
 
     def _show(self, index: int):
         if index >= len(self._frames):
