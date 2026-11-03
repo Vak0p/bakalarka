@@ -4,7 +4,8 @@ from PySide6.QtCore import QEvent, QObject, QThreadPool, QTimer, Signal, Slot
 from PySide6.QtWidgets import (QFileDialog, QHBoxLayout, QMessageBox, QPushButton,
                                QSizePolicy, QWidget)
 
-from backend.video import SUPPORTED_EXTENSIONS, VideoError, VideoInfo, VideoSource
+from backend.video import (SUPPORTED_EXTENSIONS, PreviewFrame, VideoError, VideoInfo,
+                           VideoSource)
 from frontend.widgets.frame_player import FramePlayer
 from frontend.widgets.video_info_card import VideoInfoCard
 from frontend.workers import PreviewWorker
@@ -60,6 +61,7 @@ def _spacer_state(spacer):
 
 class UploadPageController(QObject):
     video_loaded = Signal(object)
+    preview_ready = Signal(object, object)
     video_removed = Signal()
     continue_requested = Signal()
 
@@ -69,6 +71,7 @@ class UploadPageController(QObject):
         self._ui = ui
         self._worker: PreviewWorker | None = None
         self._job_id = 0
+        self._frames: list[PreviewFrame] = []
         self.info: VideoInfo | None = None
 
         self._spacers = [ui.v_spacer_1, ui.v_spacer_2]
@@ -133,9 +136,7 @@ class UploadPageController(QObject):
             QMessageBox.warning(self._window, "Cannot load video", str(error))
             return
 
-        self._cancel_preview()
-        self.info = info
-        self._show_video_info(info)
+        self._begin(info)
         self._player.begin(PREVIEW_FRAMES)
         self._player.show()
 
@@ -148,8 +149,28 @@ class UploadPageController(QObject):
 
         self.video_loaded.emit(info)
 
+    @Slot(object, object)
+    def load_cached(self, info: VideoInfo, frames):
+        path = info.path
+        if not frames or not path.is_file() or path.stat().st_size != info.size_bytes:
+            self.load_video(str(path))
+            return
+
+        self._begin(info)
+        self._frames = list(frames)
+        self._player.set_frames(frames)
+        self._player.show()
+        self._enable_continue()
+        self.video_loaded.emit(info)
+
     def shutdown(self):
         self._cancel_preview()
+
+    def _begin(self, info: VideoInfo):
+        self._cancel_preview()
+        self.info = info
+        self._frames = []
+        self._show_video_info(info)
 
     def _show_video_info(self, info: VideoInfo):
         ui = self._ui
@@ -168,9 +189,14 @@ class UploadPageController(QObject):
         self._continue_button.setToolTip(LOADING_TOOLTIP)
         self._continue_button.show()
 
+    def _enable_continue(self):
+        self._continue_button.setEnabled(True)
+        self._continue_button.setToolTip("")
+
     def _remove_video(self):
         self._cancel_preview()
         self.info = None
+        self._frames = []
         self._player.clear()
         self._player.hide()
         self._continue_button.hide()
@@ -203,14 +229,15 @@ class UploadPageController(QObject):
     @Slot(int, object)
     def _on_frame(self, job_id, frame):
         if job_id == self._job_id:
+            self._frames.append(frame)
             self._player.add_frame(frame)
 
     @Slot(int)
     def _on_finished(self, job_id):
         if job_id == self._job_id:
             self._player.finish()
-            self._continue_button.setEnabled(True)
-            self._continue_button.setToolTip("")
+            self._enable_continue()
+            self.preview_ready.emit(self.info, list(self._frames))
 
     @Slot(int, str)
     def _on_failed(self, job_id, message):

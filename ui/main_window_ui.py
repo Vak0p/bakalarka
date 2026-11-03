@@ -91,10 +91,6 @@ class Ui_main_window(object):
 
         self.verticalLayout.addWidget(self.task_button_3)
 
-        self.v_spacer_4 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.verticalLayout.addItem(self.v_spacer_4)
-
         self.recent_files_label = QLabel(self.side_bar)
         self.recent_files_label.setObjectName(u"recent_files_label")
 
@@ -114,10 +110,6 @@ class Ui_main_window(object):
         self.recent_files_list.setSpacing(0)
 
         self.verticalLayout.addWidget(self.recent_files_list)
-
-        self.v_spacer_5 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.verticalLayout.addItem(self.v_spacer_5)
 
         self.recent_projects_label = QLabel(self.side_bar)
         self.recent_projects_label.setObjectName(u"recent_projects_label")
