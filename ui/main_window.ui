@@ -190,7 +190,7 @@ QSlider::handle:horizontal:disabled {
        <item>
         <widget class="QPushButton" name="task_button_3">
          <property name="text">
-          <string>3. Stitched Output Map</string>
+          <string>3. Map Stitching</string>
          </property>
          <property name="checkable">
           <bool>true</bool>
@@ -578,6 +578,19 @@ QSlider::handle:horizontal:disabled {
           <property name="frameShadow">
            <enum>QFrame::Raised</enum>
           </property>
+          <widget class="QLabel" name="label">
+           <property name="geometry">
+            <rect>
+             <x>220</x>
+             <y>30</y>
+             <width>49</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Timeline</string>
+           </property>
+          </widget>
          </widget>
         </item>
         <item>

@@ -33,6 +33,8 @@ class MainWindow(QMainWindow):
         for index, button in enumerate(self._task_buttons):
             button.clicked.connect(partial(self.show_page, index))
         self.upload_page.continue_requested.connect(partial(self.show_page, 1))
+        self.ui.back_button.clicked.connect(partial(self.show_page, 0))
+        self.ui.continue_to_stitching_button.clicked.connect(partial(self.show_page, 2))
         self.show_page(0)
 
     def show_page(self, index: int):
