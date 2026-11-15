@@ -1,5 +1,6 @@
 import ctypes
 import sys
+from functools import partial
 
 from PySide6.QtWidgets import QMainWindow
 
@@ -25,6 +26,17 @@ class MainWindow(QMainWindow):
         self.upload_page.video_loaded.connect(self.recent_files.add)
         self.upload_page.preview_ready.connect(self.recent_files.set_preview)
         self.recent_files.video_selected.connect(self.upload_page.load_cached)
+
+        self._task_buttons = [self.ui.task_button_1, self.ui.task_button_2,
+                              self.ui.task_button_3]
+        for index, button in enumerate(self._task_buttons):
+            button.clicked.connect(partial(self.show_page, index))
+        self.upload_page.continue_requested.connect(partial(self.show_page, 1))
+        self.show_page(0)
+
+    def show_page(self, index: int):
+        self.ui.page_stack.setCurrentIndex(index)
+        self._task_buttons[index].setChecked(True)
 
     def closeEvent(self, event):
         self.upload_page.shutdown()

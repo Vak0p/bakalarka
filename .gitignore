@@ -10,3 +10,6 @@ ENV/
 .env
 .DS_Store
 Thumbs.db
+
+# generated from ui/main_window.ui by run.bat
+ui/*_ui.py
