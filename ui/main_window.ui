@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>781</width>
-    <height>646</height>
+    <width>782</width>
+    <height>645</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -263,7 +263,7 @@ QSlider::handle:horizontal:disabled {
        <enum>QFrame::Raised</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="upload_page">
        <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -442,11 +442,389 @@ QSlider::handle:horizontal:disabled {
       <widget class="QWidget" name="trim_page">
        <layout class="QVBoxLayout" name="verticalLayout_5">
         <item>
-         <widget class="QLabel" name="label">
+         <widget class="QLabel" name="trim_step_label">
           <property name="text">
-           <string>Video Trimming</string>
+           <string>Task Sequence #2</string>
           </property>
          </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="trim_title_label">
+          <property name="text">
+           <string>Trim and Preview Source Video</string>
+          </property>
+         </widget>
+        </item>
+        <item alignment="Qt::AlignHCenter">
+         <widget class="QLabel" name="trim_viewer">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Frame preview</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QPushButton" name="prev_frame_button">
+            <property name="minimumSize">
+             <size>
+              <width>40</width>
+              <height>28</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>40</width>
+              <height>28</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>|◀</string>
+            </property>
+            <property name="variant" stdset="0">
+             <string>icon</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="trim_play_button">
+            <property name="minimumSize">
+             <size>
+              <width>40</width>
+              <height>28</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>40</width>
+              <height>28</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>▶</string>
+            </property>
+            <property name="variant" stdset="0">
+             <string>icon</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="next_frame_button">
+            <property name="minimumSize">
+             <size>
+              <width>40</width>
+              <height>28</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>40</width>
+              <height>28</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>▶|</string>
+            </property>
+            <property name="variant" stdset="0">
+             <string>icon</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QLabel" name="trim_time_label">
+            <property name="minimumSize">
+             <size>
+              <width>40</width>
+              <height>28</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>0:00</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QFrame" name="timeline">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>70</height>
+           </size>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <item>
+           <widget class="QLabel" name="start_label">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Start</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QDoubleSpinBox" name="start_spin">
+            <property name="suffix">
+             <string> s</string>
+            </property>
+            <property name="maximum">
+             <double>9999.000000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.100000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="set_start_button">
+            <property name="text">
+             <string>Set start</string>
+            </property>
+            <property name="variant" stdset="0">
+             <string>secondary</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QLabel" name="end_label">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>End</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QDoubleSpinBox" name="end_spin">
+            <property name="suffix">
+             <string> s</string>
+            </property>
+            <property name="maximum">
+             <double>9999.000000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.100000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="set_end_button">
+            <property name="text">
+             <string>Set end</string>
+            </property>
+            <property name="variant" stdset="0">
+             <string>secondary</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <item>
+           <widget class="QGroupBox" name="frame_selection_group">
+            <property name="title">
+             <string>Frame selection</string>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_7">
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_5">
+               <item>
+                <widget class="QLabel" name="sample_every_label">
+                 <property name="text">
+                  <string>Sample every</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QSpinBox" name="step_spin">
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>100</number>
+                 </property>
+                 <property name="value">
+                  <number>10</number>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="frame_label">
+                 <property name="text">
+                  <string>frames</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <widget class="QLabel" name="step_hint_label">
+               <property name="text">
+                <string>≈ 3 frames / s</string>
+               </property>
+               <property name="variant" stdset="0">
+                <string>muted</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="selection_group">
+            <property name="title">
+             <string>Selection</string>
+            </property>
+            <layout class="QFormLayout" name="formLayout">
+             <item row="0" column="0">
+              <widget class="QLabel" name="duration_label">
+               <property name="text">
+                <string>Duration</string>
+               </property>
+               <property name="variant" stdset="0">
+                <string>muted</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLabel" name="duration_value_label">
+               <property name="text">
+                <string>0:00</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="frames_label">
+               <property name="text">
+                <string>Frames</string>
+               </property>
+               <property name="variant" stdset="0">
+                <string>muted</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QLabel" name="frames_value_label">
+               <property name="text">
+                <string>0</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="to_stitch_label">
+               <property name="text">
+                <string>To stitch</string>
+               </property>
+               <property name="variant" stdset="0">
+                <string>muted</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QLabel" name="stitch_count_label">
+               <property name="text">
+                <string>0</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_6">
+          <item>
+           <widget class="QPushButton" name="back_button">
+            <property name="text">
+             <string>&lt; Back</string>
+            </property>
+            <property name="variant" stdset="0">
+             <string>secondary</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_3">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="continue_to_stitching_button">
+            <property name="minimumSize">
+             <size>
+              <width>220</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>CONTINUE TO STITCHING</string>
+            </property>
+            <property name="variant" stdset="0">
+             <string>outline</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </widget>
