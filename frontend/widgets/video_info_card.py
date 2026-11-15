@@ -4,7 +4,6 @@ from PySide6.QtWidgets import QGridLayout, QHBoxLayout, QLabel, QVBoxLayout, QWi
 from backend.video import VideoInfo
 from frontend.widgets.elided_label import ElidedLabel
 
-MUTED_COLOR = "#9A9AA0"
 FIELDS = ("Resolution", "Frame rate", "Duration", "File size")
 
 
@@ -33,7 +32,7 @@ class VideoInfoCard(QWidget):
         self._name.setFont(font)
 
         self._path = ElidedLabel()
-        self._path.setStyleSheet(f"color: {MUTED_COLOR};")
+        self._path.setProperty("variant", "muted")
 
         self._values: dict[str, QLabel] = {}
         grid = QGridLayout()
@@ -44,7 +43,7 @@ class VideoInfoCard(QWidget):
             row, pair = divmod(index, 2)
             column = pair * 3
             key = QLabel(field)
-            key.setStyleSheet(f"color: {MUTED_COLOR};")
+            key.setProperty("variant", "muted")
             value = QLabel()
             self._values[field] = value
             grid.addWidget(key, row, column)

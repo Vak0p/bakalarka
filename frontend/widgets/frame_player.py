@@ -11,47 +11,6 @@ from frontend.qt_utils import make_media_icon, ndarray_to_pixmap
 PLAY_FPS = 10
 ACCENT = "#C38B6B"
 
-STYLE = """
-QPushButton {
-    background-color: #C38B6B;
-    color: black;
-    font-weight: bold;
-    border: none;
-    border-radius: 5px;
-    padding: 0;
-}
-QPushButton:hover {
-    background-color: #D49D7E;
-}
-QPushButton:disabled {
-    background-color: #3A3B3F;
-}
-QSlider::groove:horizontal {
-    height: 4px;
-    background: #3A3B3F;
-    border-radius: 2px;
-}
-QSlider::sub-page:horizontal {
-    background: #C38B6B;
-    border-radius: 2px;
-}
-QSlider::handle:horizontal {
-    background: #C38B6B;
-    width: 14px;
-    margin: -5px 0;
-    border-radius: 7px;
-}
-QSlider::handle:horizontal:hover {
-    background: #D49D7E;
-}
-QSlider::sub-page:horizontal:disabled {
-    background: #5B5B60;
-}
-QSlider::handle:horizontal:disabled {
-    background: #5B5B60;
-}
-"""
-
 
 class _LoadingOverlay(QWidget):
     def __init__(self, parent: QWidget):
@@ -114,6 +73,7 @@ class FramePlayer(QWidget):
 
         self._slider = QSlider(Qt.Orientation.Horizontal)
         self._play_button = QPushButton()
+        self._play_button.setProperty("variant", "icon")
         self._play_button.setFixedSize(40, 28)
         self._play_button.setIconSize(QSize(16, 16))
         self._time_label = QLabel("0:00")
@@ -129,8 +89,6 @@ class FramePlayer(QWidget):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.addWidget(self._image, 1)
         layout.addLayout(controls)
-
-        self.setStyleSheet(STYLE)
 
         self._timer = QTimer(self)
         self._timer.setInterval(1000 // PLAY_FPS)

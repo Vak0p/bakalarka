@@ -7,10 +7,7 @@ from backend.video import PreviewFrame, VideoInfo
 from frontend.widgets.elided_label import ElidedLabel
 from frontend.widgets.frame_loop import FrameLoop
 
-ACCENT = "#C38B6B"
-MUTED = "#9A9AA0"
 PREVIEW_MAX_HEIGHT = 120
-BUTTON_HEIGHT = 28
 SPACING = 4
 HEADER_INSET = 3
 RIGHT_MARGIN = 4
@@ -22,47 +19,6 @@ QLabel {
     margin: 0;
     border: none;
     background: transparent;
-}
-"""
-
-REMOVE_BUTTON_STYLE = """
-QPushButton {
-    background: transparent;
-    color: #9A9AA0;
-    border: none;
-    padding: 0 2px;
-    font-weight: normal;
-}
-QPushButton:hover {
-    color: #E8E8E8;
-}
-"""
-
-UPLOAD_BUTTON_STYLE = """
-QPushButton {
-    background-color: #C38B6B;
-    color: black;
-    font-weight: bold;
-    border: none;
-    border-radius: 5px;
-    padding: 0 8px;
-}
-QPushButton:hover {
-    background-color: #D49D7E;
-}
-"""
-
-CANCEL_BUTTON_STYLE = """
-QPushButton {
-    background-color: #3A3B3F;
-    color: #E8E8E8;
-    border: none;
-    border-radius: 5px;
-    font-weight: normal;
-    padding: 0 8px;
-}
-QPushButton:hover {
-    background-color: #4A4B50;
 }
 """
 
@@ -83,10 +39,10 @@ class RecentFileEntry(QWidget):
 
         self._name = ElidedLabel(LEFT_CENTER)
         self._name.setFixedHeight(text_height)
-        self._name.setStyleSheet(f"color: {ACCENT};")
+        self._name.setProperty("variant", "accent")
 
         remove_button = QPushButton("Remove")
-        remove_button.setStyleSheet(REMOVE_BUTTON_STYLE)
+        remove_button.setProperty("variant", "link")
         remove_button.setFixedHeight(text_height)
         remove_button.setCursor(Qt.CursorShape.PointingHandCursor)
         remove_button.clicked.connect(self.remove_requested)
@@ -102,19 +58,17 @@ class RecentFileEntry(QWidget):
         self._status = QLabel("Preview is not available yet")
         self._status.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self._status.setFixedHeight(PREVIEW_MAX_HEIGHT)
-        self._status.setStyleSheet(f"color: {MUTED};")
+        self._status.setProperty("variant", "muted")
 
         self._path = ElidedLabel(LEFT_CENTER)
         self._path.setFixedHeight(text_height)
-        self._path.setStyleSheet(f"color: {MUTED};")
+        self._path.setProperty("variant", "muted")
 
         upload_button = QPushButton("Upload this video")
-        upload_button.setStyleSheet(UPLOAD_BUTTON_STYLE)
-        upload_button.setFixedHeight(BUTTON_HEIGHT)
+        upload_button.setProperty("variant", "primary")
         upload_button.clicked.connect(self.upload_requested)
         cancel_button = QPushButton("Cancel")
-        cancel_button.setStyleSheet(CANCEL_BUTTON_STYLE)
-        cancel_button.setFixedHeight(BUTTON_HEIGHT)
+        cancel_button.setProperty("variant", "secondary")
         cancel_button.clicked.connect(self.cancel_requested)
 
         buttons = QHBoxLayout()

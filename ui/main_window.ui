@@ -13,6 +13,103 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">/* Buttons: set the dynamic property &quot;variant&quot; on a QPushButton */
+QPushButton[variant=&quot;primary&quot;], QPushButton[variant=&quot;icon&quot;] {
+    background-color: #C38B6B;
+    color: #000000;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    padding: 7px 12px;
+}
+QPushButton[variant=&quot;icon&quot;] {
+    padding: 0;
+}
+QPushButton[variant=&quot;primary&quot;]:hover, QPushButton[variant=&quot;icon&quot;]:hover {
+    background-color: #D49D7E;
+}
+QPushButton[variant=&quot;primary&quot;]:disabled, QPushButton[variant=&quot;icon&quot;]:disabled {
+    background-color: #3A3B3F;
+    color: #6B6B70;
+}
+
+QPushButton[variant=&quot;secondary&quot;] {
+    background-color: #3A3B3F;
+    color: #E8E8E8;
+    border: none;
+    border-radius: 5px;
+    padding: 7px 12px;
+}
+QPushButton[variant=&quot;secondary&quot;]:hover {
+    background-color: #4A4B50;
+}
+QPushButton[variant=&quot;secondary&quot;]:pressed {
+    background-color: #2B2C30;
+}
+
+QPushButton[variant=&quot;outline&quot;] {
+    background-color: transparent;
+    color: #C38B6B;
+    border: 2px solid #C38B6B;
+    border-radius: 5px;
+    font-weight: bold;
+    padding: 10px;
+}
+QPushButton[variant=&quot;outline&quot;]:hover {
+    background-color: rgba(195, 139, 107, 40);
+    color: #D49D7E;
+    border-color: #D49D7E;
+}
+QPushButton[variant=&quot;outline&quot;]:disabled {
+    background-color: transparent;
+    color: #5B5B60;
+    border-color: #3A3B3F;
+}
+
+QPushButton[variant=&quot;link&quot;] {
+    background: transparent;
+    color: #9A9AA0;
+    border: none;
+    padding: 0 2px;
+}
+QPushButton[variant=&quot;link&quot;]:hover {
+    color: #E8E8E8;
+}
+
+/* Labels: set the dynamic property &quot;variant&quot; on a QLabel */
+QLabel[variant=&quot;muted&quot;] {
+    color: #9A9AA0;
+}
+QLabel[variant=&quot;accent&quot;] {
+    color: #C38B6B;
+}
+
+/* Sliders */
+QSlider::groove:horizontal {
+    height: 4px;
+    background: #3A3B3F;
+    border-radius: 2px;
+}
+QSlider::sub-page:horizontal {
+    background: #C38B6B;
+    border-radius: 2px;
+}
+QSlider::handle:horizontal {
+    background: #C38B6B;
+    width: 14px;
+    margin: -5px 0;
+    border-radius: 7px;
+}
+QSlider::handle:horizontal:hover {
+    background: #D49D7E;
+}
+QSlider::sub-page:horizontal:disabled,
+QSlider::handle:horizontal:disabled {
+    background: #5B5B60;
+}
+</string>
+  </property>
   <widget class="QWidget" name="central_widget">
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
@@ -63,9 +160,6 @@
        </item>
        <item>
         <widget class="QPushButton" name="task_button_1">
-         <property name="styleSheet">
-          <string notr="true"/>
-         </property>
          <property name="text">
           <string>1. Source Video Upload</string>
          </property>
@@ -82,9 +176,6 @@
        </item>
        <item>
         <widget class="QPushButton" name="task_button_2">
-         <property name="styleSheet">
-          <string notr="true"/>
-         </property>
          <property name="text">
           <string>2. Trim and Preview</string>
          </property>
@@ -98,9 +189,6 @@
        </item>
        <item>
         <widget class="QPushButton" name="task_button_3">
-         <property name="styleSheet">
-          <string notr="true"/>
-         </property>
          <property name="text">
           <string>3. Stitched Output Map</string>
          </property>
@@ -253,20 +341,11 @@
            </item>
            <item>
             <widget class="QPushButton" name="upload_button">
-             <property name="styleSheet">
-              <string notr="true">QPushButton {
-    background-color: #C38B6B;
-    color: black;
-    font-weight: bold;
-    border-radius: 5px;
-    padding: 12px;
-}
-QPushButton:hover {
-    background-color: #D49D7E;
-}</string>
-             </property>
              <property name="text">
               <string>+ CHOOSE VIDEO FILE</string>
+             </property>
+             <property name="variant" stdset="0">
+              <string>primary</string>
              </property>
             </widget>
            </item>

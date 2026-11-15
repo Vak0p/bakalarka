@@ -14,44 +14,6 @@ PREVIEW_FRAMES = 100
 PREVIEW_MAX_WIDTH = 480
 LOADING_TOOLTIP = "Available once the video preview has finished loading"
 
-CONTINUE_BUTTON_STYLE = """
-QPushButton {
-    background-color: transparent;
-    color: #C38B6B;
-    border: 2px solid #C38B6B;
-    border-radius: 5px;
-    font-weight: bold;
-    padding: 10px;
-}
-QPushButton:hover {
-    background-color: rgba(195, 139, 107, 40);
-    color: #D49D7E;
-    border-color: #D49D7E;
-}
-QPushButton:disabled {
-    background-color: transparent;
-    color: #5B5B60;
-    border-color: #3A3B3F;
-}
-"""
-
-SECONDARY_BUTTON_STYLE = """
-QPushButton {
-    background-color: #3A3B3F;
-    color: #E8E8E8;
-    border: none;
-    border-radius: 5px;
-    font-weight: normal;
-    padding: 7px 12px;
-}
-QPushButton:hover {
-    background-color: #4A4B50;
-}
-QPushButton:pressed {
-    background-color: #2B2C30;
-}
-"""
-
 
 def _spacer_state(spacer):
     size = spacer.sizeHint()
@@ -81,7 +43,7 @@ class UploadPageController(QObject):
         self._player.hide()
 
         self._continue_button = QPushButton("CONTINUE TO VIDEO TRIMMING")
-        self._continue_button.setStyleSheet(CONTINUE_BUTTON_STYLE)
+        self._continue_button.setProperty("variant", "outline")
         self._continue_button.hide()
 
         self._info_card = VideoInfoCard()
@@ -89,12 +51,13 @@ class UploadPageController(QObject):
 
         self._remove_button = QPushButton("Remove video")
         self._replace_button = QPushButton("Upload different video")
+        self._remove_button.setProperty("variant", "secondary")
+        self._replace_button.setProperty("variant", "secondary")
         self._secondary_row = QWidget()
         row_layout = QHBoxLayout(self._secondary_row)
         row_layout.setContentsMargins(0, 0, 0, 0)
         row_layout.addWidget(self._remove_button, 1)
         row_layout.addWidget(self._replace_button, 1)
-        self._secondary_row.setStyleSheet(SECONDARY_BUTTON_STYLE)
         self._secondary_row.hide()
 
         zone_layout = ui.drag_and_drop_zone.layout()

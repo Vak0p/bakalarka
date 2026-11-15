@@ -14,6 +14,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.ui = Ui_main_window()
         self.ui.setupUi(self)
+        self.setStyleSheet(self.styleSheet())
         self.setWindowTitle("Surface Surfer")
         self._enable_dark_title_bar()
 
